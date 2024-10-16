@@ -136,13 +136,12 @@ class MLPClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        #
-        #                    ╔═══════════════════════╗
-        #                    ║                       ║
-        #                    ║       YOUR CODE       ║
-        #                    ║                       ║
-        #                    ╚═══════════════════════╝
-        #
+
+        logits = X @ self.params["W1"] + self.params["b1"]  # shape (N, hidden_dim_1)
+        logits = self.activation_func(logits)
+        logits = logits @ self.params["W2"] + self.params["b2"]
+        logits = self.activation_func(logits)
+        logits = logits @ self.params["W3"] + self.params["b3"]
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -165,13 +164,8 @@ class MLPClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        #
-        #                    ╔═══════════════════════╗
-        #                    ║                       ║
-        #                    ║       YOUR CODE       ║
-        #                    ║                       ║
-        #                    ╚═══════════════════════╝
-        #
+
+        y_pred = torch.argmax(self.forward(X), dim=1)  # shape (N,)
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -200,13 +194,13 @@ class MLPClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        #
-        #                    ╔═══════════════════════╗
-        #                    ║                       ║
-        #                    ║       YOUR CODE       ║
-        #                    ║                       ║
-        #                    ╚═══════════════════════╝
-        #
+        logits = self.forward(X)
+        loss = nn.CrossEntropyLoss()(logits, y)
+        loss += self.reg * (
+            torch.norm(self.params["W1"]) ** 2
+            + torch.norm(self.params["W2"]) ** 2
+            + torch.norm(self.params["W3"]) ** 2
+        )
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -225,13 +219,12 @@ class MLPClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        #
-        #                    ╔═══════════════════════╗
-        #                    ║                       ║
-        #                    ║       YOUR CODE       ║
-        #                    ║                       ║
-        #                    ╚═══════════════════════╝
-        #
+        self.params["W1"].data -= self.learning_rate * self.params["W1"].grad
+        self.params["b1"].data -= self.learning_rate * self.params["b1"].grad
+        self.params["W2"].data -= self.learning_rate * self.params["W2"].grad
+        self.params["b2"].data -= self.learning_rate * self.params["b2"].grad
+        self.params["W3"].data -= self.learning_rate * self.params["W3"].grad
+        self.params["b3"].data -= self.learning_rate * self.params["b3"].grad
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 

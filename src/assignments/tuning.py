@@ -142,8 +142,6 @@ def cross_validate_knn(
         k_to_metrics["recall"][k] = np.mean(recall_list, axis=0)
         k_to_metrics["f1"][k] = np.mean(f1_list, axis=0)
 
-    return k_to_metrics
-
     # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
     return k_to_metrics

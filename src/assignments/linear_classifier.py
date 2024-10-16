@@ -114,13 +114,10 @@ class LinearClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        #
-        #                    ╔═══════════════════════╗
-        #                    ║                       ║
-        #                    ║       YOUR CODE       ║
-        #                    ║                       ║
-        #                    ╚═══════════════════════╝
-        #
+        n, d = X.shape
+        W = self.params["W"]
+        b = self.params["b"]
+        logits = torch.mm(X, W) + b
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -143,13 +140,7 @@ class LinearClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        #
-        #                    ╔═══════════════════════╗
-        #                    ║                       ║
-        #                    ║       YOUR CODE       ║
-        #                    ║                       ║
-        #                    ╚═══════════════════════╝
-        #
+        y_pred = torch.argmax(self.forward(X), dim=1)
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -179,13 +170,11 @@ class LinearClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        #
-        #                    ╔═══════════════════════╗
-        #                    ║                       ║
-        #                    ║       YOUR CODE       ║
-        #                    ║                       ║
-        #                    ╚═══════════════════════╝
-        #
+        n, d = X.shape
+        W = self.params["W"]
+        b = self.params["b"]
+        logits = torch.mm(X, W) + b
+        loss = torch.nn.CrossEntropyLoss()(logits, y) + self.reg * torch.sum(W**2)
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -206,13 +195,8 @@ class LinearClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        #
-        #                    ╔═══════════════════════╗
-        #                    ║                       ║
-        #                    ║       YOUR CODE       ║
-        #                    ║                       ║
-        #                    ╚═══════════════════════╝
-        #
+        for name in self.params.keys():
+            self.params[name].data -= self.learning_rate * self.params[name].grad
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
