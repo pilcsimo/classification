@@ -98,13 +98,51 @@ def cross_validate_knn(
     # Good luck!                                                        #
     # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
     # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-    #
-    #                    ╔═══════════════════════╗
-    #                    ║                       ║
-    #                    ║       YOUR CODE       ║
-    #                    ║                       ║
-    #                    ╚═══════════════════════╝
-    #
+
+    # Shuffle the dataset
+    indices = np.arange(X.shape[0])
+    np.random.shuffle(indices)
+    X, y = X[indices], y[indices]
+
+    # Split the dataset into k folds
+    folds = np.array_split(np.arange(X.shape[0]), num_folds)
+
+    for k in k_choices:
+        accuracy_list = []
+        precision_list = []
+        recall_list = []
+        f1_list = []
+
+        for i in range(num_folds):
+            # Create training and validation sets
+            val_indices = folds[i]
+            train_indices = np.concatenate(
+                [folds[j] for j in range(num_folds) if j != i]
+            )
+
+            X_train, y_train = X[train_indices], y[train_indices]
+            X_val, y_val = X[val_indices], y[val_indices]
+
+            # Train kNN classifier
+            knn = KNNClassifier(k=k, vectorized=True)
+            knn.train(X_train, y_train)
+
+            # Predict on validation set
+            y_pred = knn.predict(X_val)
+
+            # Calculate metrics
+            accuracy_list.append(accuracy_score(y_val, y_pred))
+            precision_list.append(precision_score(y_val, y_pred, average=None))
+            recall_list.append(recall_score(y_val, y_pred, average=None))
+            f1_list.append(f1_score(y_val, y_pred, average=None))
+
+        # Store average metrics for current k
+        k_to_metrics["accuracy"][k] = np.mean(accuracy_list)
+        k_to_metrics["precision"][k] = np.mean(precision_list, axis=0)
+        k_to_metrics["recall"][k] = np.mean(recall_list, axis=0)
+        k_to_metrics["f1"][k] = np.mean(f1_list, axis=0)
+
+    return k_to_metrics
 
     # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 

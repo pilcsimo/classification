@@ -165,13 +165,7 @@ files, make changes only to sections resembling the following:
 # loops over dimensions or np.linalg.norm().                        #
 # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
 # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-#
-#                    ╔═══════════════════════╗
-#                    ║                       ║
-#                    ║       YOUR CODE       ║
-#                    ║                       ║
-#                    ╚═══════════════════════╝
-#
+dists = np.sqrt(np.sum(X**2, axis=1)[:, np.newaxis] + np.sum(self.X_train**2, axis=1) - 2 * np.dot(X, self.X_train.T))
 # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 ```
 

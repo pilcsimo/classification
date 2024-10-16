@@ -91,13 +91,8 @@ class KNNClassifier:
                 # loops over dimensions or np.linalg.norm().                        #
                 # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
                 # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-                #
-                #                    ╔═══════════════════════╗
-                #                    ║                       ║
-                #                    ║       YOUR CODE       ║
-                #                    ║                       ║
-                #                    ╚═══════════════════════╝
-                #
+
+                dists[i, j] = np.sqrt(np.sum((X[i] - self.X_train[j]) ** 2))
 
                 # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -132,13 +127,16 @@ class KNNClassifier:
         # want to look this up on the internet.)                            #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        #
-        #                    ╔═══════════════════════╗
-        #                    ║                       ║
-        #                    ║       YOUR CODE       ║
-        #                    ║                       ║
-        #                    ╚═══════════════════════╝
-        #
+
+        X_square = np.sum(X**2, axis=1).reshape(
+            -1, 1
+        )  # Reshape array to (num_test, 1) for broadcasting
+        X_train_square = np.sum(self.X_train**2, axis=1)  # Shape (1, num_train)
+        cross_term = np.dot(X, self.X_train.T)  # Shape (num_test, num_train)
+
+        dists = np.sqrt(
+            X_square + X_train_square - 2 * cross_term
+        )  # automatically broadcasted to shape (num_test, num_train) (np feature)
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -170,13 +168,20 @@ class KNNClassifier:
             # functions useful.                                                 #
             # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
             # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-            #
-            #                    ╔═══════════════════════╗
-            #                    ║                       ║
-            #                    ║       YOUR CODE       ║
-            #                    ║                       ║
-            #                    ╚═══════════════════════╝
-            #
+
+            closest_y = self.y_train[
+                np.argsort(dists[i])[: self.k]
+            ]  # Get the k closest labels
+            label_count = {}  # Dictionary to store name and count of each label
+
+            for label in closest_y:  # Count occurances of each label
+                if label in label_count:
+                    label_count[label] += 1
+                else:
+                    label_count[label] = 1
+            y_pred[i] = min(
+                label_count, key=lambda x: (-label_count[x], x)
+            )  # sort by number of occurances and in case of tie, select the alphabetically first label
 
             # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
