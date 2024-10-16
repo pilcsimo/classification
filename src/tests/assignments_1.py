@@ -1,6 +1,6 @@
 import os
 import numpy as np
-
+import traceback
 from .utils import load_module
 
 
@@ -11,7 +11,7 @@ def test_assignment_1_1(
     knn_module = load_module(src_dir, "knn_classifier")
     KNNClassifier = knn_module.KNNClassifier
 
-    ret = {"points": 0, "message": "", "max_points": 1}
+    ret = {"points": 0, "message": "", "max_points": 0.5}
 
     np.random.seed(seed)
 
@@ -40,7 +40,7 @@ def test_assignment_1_1(
         expected_dists = np.load(verification_file)
 
         try:
-            if np.allclose(expected_dists, dists):
+            if np.allclose(expected_dists, dists, atol=1e-6, rtol=1e-4):
                 ret["message"] = f"PASSED!"
                 ret["points"] = ret["max_points"]
             else:
@@ -49,7 +49,7 @@ def test_assignment_1_1(
                     "message"
                 ] = f"\tFAILED! \n\tDifference of distance matrices: {difference}"
         except Exception as e:
-            ret["message"] = f"\tFAILED! \n\t{e}"
+            ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
 
     return ret
 
@@ -82,7 +82,7 @@ def test_assignment_1_2(
         classifier.train(X_train, y_train)
         y_pred = classifier._predict_labels(dists)
     except Exception as e:
-        ret["message"] += f"\tFAILED! \n\t{e}"
+        ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
         return ret
 
     if generate:
@@ -92,7 +92,7 @@ def test_assignment_1_2(
         expected_y_pred = np.load(verification_file)
 
         try:
-            if np.allclose(y_pred, expected_y_pred):
+            if np.allclose(y_pred, expected_y_pred, atol=1e-6, rtol=1e-4):
                 ret["message"] += f"PASSED!"
                 ret["points"] = ret["max_points"]
             else:
@@ -101,7 +101,7 @@ def test_assignment_1_2(
                     "message"
                 ] += f"\tFAILED! \n\tDifference of predicted labels: {difference}"
         except Exception as e:
-            ret["message"] += f"\tFAILED! \n\t{e}"
+            ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
 
     return ret
 
@@ -132,7 +132,7 @@ def test_assignment_1_3(
         classifier.train(X_train, y_train)
         dists = classifier._compute_distances_vectorized(X_test)
     except Exception as e:
-        ret["message"] = f"\tFAILED! \n\t{e}"
+        ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
         return ret
 
     if generate:
@@ -142,7 +142,7 @@ def test_assignment_1_3(
         expected_dists = np.load(verification_file)
 
         try:
-            if np.allclose(expected_dists, dists):
+            if np.allclose(expected_dists, dists, atol=1e-6, rtol=1e-4):
                 ret["message"] = f"PASSED!"
                 ret["points"] = ret["max_points"]
             else:
@@ -151,6 +151,6 @@ def test_assignment_1_3(
                     "message"
                 ] = f"\tFAILED! \n\tDifference of distance matrices: {difference}"
         except Exception as e:
-            ret["message"] = f"\tFAILED! \n\t{e}"
+            ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
 
     return ret

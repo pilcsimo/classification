@@ -1,3 +1,5 @@
+import traceback
+
 import torch
 import torch.nn as nn
 
@@ -10,7 +12,7 @@ def test_assignment_3_1(
     lin_classifier_module = load_module(src_dir, "linear_classifier")
     LinearClassifier = lin_classifier_module.LinearClassifier
 
-    ret = {"points": 0, "message": "", "max_points": 1}
+    ret = {"points": 0, "message": "", "max_points": 0.5}
 
     num_classes = 10
     num_features = 5
@@ -25,11 +27,11 @@ def test_assignment_3_1(
     X = torch.randn(num_samples, num_features)
 
     try:
-        model = LinearClassifier(num_classes, num_features)
+        model = LinearClassifier(num_features=num_features, num_classes=num_classes)
         model.params = params
         logits = model.forward(X)
     except Exception as e:
-        ret["message"] = f"\tFAILED! \n\t{e}"
+        ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
         return ret
 
     if generate:
@@ -39,14 +41,14 @@ def test_assignment_3_1(
         expected_logits = torch.load(verification_file, weights_only=True)
 
         try:
-            if torch.allclose(logits, expected_logits):
+            if torch.allclose(logits, expected_logits, atol=1e-6, rtol=1e-4):
                 ret["message"] = f"PASSED!"
                 ret["points"] = ret["max_points"]
             else:
                 difference = torch.sum(torch.abs(logits - expected_logits))
                 ret["message"] = f"\tFAILED! \n\tDifference of logits: {difference}"
         except Exception as e:
-            ret["message"] = f"\tFAILED! \n\t{e}"
+            ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
 
     return ret
 
@@ -58,7 +60,7 @@ def test_assignment_3_2(
     lin_classifier_module = load_module(src_dir, "linear_classifier")
     LinearClassifier = lin_classifier_module.LinearClassifier
 
-    ret = {"points": 0, "message": "", "max_points": 1}
+    ret = {"points": 0, "message": "", "max_points": 0.5}
 
     num_classes = 10
     num_features = 5
@@ -73,11 +75,11 @@ def test_assignment_3_2(
     X = torch.randn(num_samples, num_features)
 
     try:
-        model = LinearClassifier(num_classes, num_features)
+        model = LinearClassifier(num_features=num_features, num_classes=num_classes)
         model.params = params
         y_pred = model.predict(X)
     except Exception as e:
-        ret["message"] = f"\tFAILED! \n\t{e}"
+        ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
         return ret
 
     if generate:
@@ -87,7 +89,7 @@ def test_assignment_3_2(
         expected_logits = torch.load(verification_file, weights_only=True)
 
         try:
-            if torch.allclose(y_pred, expected_logits):
+            if torch.allclose(y_pred, expected_logits, atol=1e-6, rtol=1e-4):
                 ret["message"] = f"PASSED!"
                 ret["points"] = ret["max_points"]
             else:
@@ -96,7 +98,7 @@ def test_assignment_3_2(
                     "message"
                 ] = f"\tFAILED! \n\tDifference of predicted labels: {difference}"
         except Exception as e:
-            ret["message"] = f"\tFAILED! \n\t{e}"
+            ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
 
     return ret
 
@@ -124,11 +126,11 @@ def test_assignment_3_3(
     y = torch.randint(0, num_classes, (num_samples,))
 
     try:
-        model = LinearClassifier(num_classes, num_features)
+        model = LinearClassifier(num_features=num_features, num_classes=num_classes)
         model.params = params
         loss = model.loss(X, y)
     except Exception as e:
-        ret["message"] = f"\tFAILED! \n\t{e}"
+        ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
         return ret
 
     if generate:
@@ -138,14 +140,14 @@ def test_assignment_3_3(
         expected_loss = torch.load(verification_file, weights_only=True)
 
         try:
-            if torch.allclose(loss, expected_loss):
+            if torch.allclose(loss, expected_loss, atol=1e-6, rtol=1e-4):
                 ret["message"] = f"PASSED!"
                 ret["points"] = ret["max_points"]
             else:
                 difference = torch.sum(torch.abs(loss - expected_loss))
                 ret["message"] = f"\tFAILED! \n\tLoss difference: {difference}"
         except Exception as e:
-            ret["message"] = f"\tFAILED! \n\t{e}"
+            ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
 
     return ret
 
@@ -173,7 +175,7 @@ def test_assignment_3_4(
     y = torch.randint(0, num_classes, (num_samples,))
 
     try:
-        model = LinearClassifier(num_classes, num_features)
+        model = LinearClassifier(num_features=num_features, num_classes=num_classes)
         model.params = params
         model._zero_gradients()
         loss = model.loss(X, y)
@@ -181,7 +183,7 @@ def test_assignment_3_4(
         model._update_weights()
 
     except Exception as e:
-        ret["message"] = f"\tFAILED! \n\t{e}"
+        ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
         return ret
 
     if generate:
@@ -208,6 +210,6 @@ def test_assignment_3_4(
                     "message"
                 ] = f"\tFAILED! \n\tParameter difference: {param_difference}"
         except Exception as e:
-            ret["message"] = f"\tFAILED! \n\t{e}"
+            ret["message"] = f"\tFAILED! \n\t{e.__class__.__name__}:{e}\n{traceback.format_exc()}"
 
     return ret

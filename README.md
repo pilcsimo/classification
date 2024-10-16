@@ -1,6 +1,6 @@
 # HW 2 - Classification
 
-This is official repository for the second homework assignment of the
+This is official repository for the first homework assignment of the
 course [UROB](https://intranet.fel.cvut.cz/cz/education/bk/predmety/66/51/p6651806.html). The assignment is about
 classification - its understanding and implementation.
 
@@ -85,7 +85,7 @@ enhancing your comprehension of this powerful machine learning tool.
 
 ## Getting started
 
-To begin your journey with this assignment, follow these simple steps:
+To be able to start with the assignments, follow these simple steps:
 
 1. **Clone the Repository**: Start by cloning this repository to your local computer. Use the following command in your
    terminal:
@@ -94,7 +94,15 @@ To begin your journey with this assignment, follow these simple steps:
     git clone https://github.com/urob-ctu/classification.git
     ```
 
-2. **Install Dependencies**: In your environment, you need to have Python 3.12 installed. Then you can run 
+2. **Install System Dependencies**: Before proceeding, ensure that you have the following system dependencies installed:
+
+    - `python==3.12`
+    - `python3-pip`
+    - `wget`
+    - `tar`
+    - `zip`
+
+3. **Install Python Dependencies**: In your environment, you need to have Python 3.12 installed. Then you can run 
 
     ```bash
     pip install -r requirements.txt
@@ -108,7 +116,7 @@ To begin your journey with this assignment, follow these simple steps:
     pip install -e .
     ```
    
-3. **Check Your Installation**: To verify that the installation was successful, run the following command in your
+4. **Check Your Installation**: To verify that the installation was successful, run the following command in your
    terminal:
 
     ```shell
@@ -123,7 +131,7 @@ To begin your journey with this assignment, follow these simple steps:
     INFO: Environment is correctly set up.
     ```
    
-4. **Choose Your IDE**: Next, open the project in your preferred Integrated Development Environment (IDE). While we
+5. **Choose Your IDE**: Next, open the project in your preferred Integrated Development Environment (IDE). While we
    suggest PyCharm, the choice ultimately lies with you.
 
    > **Warning**
@@ -173,7 +181,7 @@ suboptimal grade. If you have any questions, please reach out to the teaching as
 To test your code, you can run the following command in your terminal:
 
 ```shell
-hw1-test
+hw1-test-assignments
 ```
 
 ## How to submit
