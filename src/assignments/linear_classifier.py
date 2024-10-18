@@ -114,7 +114,7 @@ class LinearClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        n, d = X.shape
+
         W = self.params["W"]
         b = self.params["b"]
         logits = torch.mm(X, W) + b
@@ -140,7 +140,11 @@ class LinearClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        y_pred = torch.argmax(self.forward(X), dim=1)
+
+        logits = self.forward(X)  # first get the logits
+        y_pred = torch.argmax(
+            logits, dim=1
+        )  #  get the class with the highest logits score
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -170,11 +174,16 @@ class LinearClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        n, d = X.shape
+
         W = self.params["W"]
         b = self.params["b"]
-        logits = torch.mm(X, W) + b
-        loss = torch.nn.CrossEntropyLoss()(logits, y) + self.reg * torch.sum(W**2)
+        logits = self.forward(X)
+        l2_reg = self.reg * (
+            torch.sum(W**2) + torch.sum(b**2)
+        )  # L2 regularization, including both W and b
+        loss = (
+            torch.nn.CrossEntropyLoss()(logits, y) + l2_reg
+        )  # cross-entropy loss with L2 regularization
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -195,8 +204,10 @@ class LinearClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        for name in self.params.keys():
-            self.params[name].data -= self.learning_rate * self.params[name].grad
+
+        # Update the weights and biases using the gradient descent (backpropagation)
+        self.params["W"].data -= self.learning_rate * self.params["W"].grad
+        self.params["b"].data -= self.learning_rate * self.params["b"].grad
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 

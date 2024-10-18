@@ -136,12 +136,18 @@ class MLPClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-
-        logits = X @ self.params["W1"] + self.params["b1"]  # shape (N, hidden_dim_1)
-        logits = self.activation_func(logits)
-        logits = logits @ self.params["W2"] + self.params["b2"]
-        logits = self.activation_func(logits)
-        logits = logits @ self.params["W3"] + self.params["b3"]
+        # forward pass of the model
+        layer1_in = (
+            X @ self.params["W1"] + self.params["b1"]
+        )  # apply l1 weights and bias
+        layer2_out = self.activation_func(layer1_in)  # go through non-linearity
+        layer2_in = (
+            layer2_out @ self.params["W2"] + self.params["b2"]
+        )  # apply l2 weights and bias
+        layer2_out = self.activation_func(layer2_in)  # go through non-linearity
+        logits = (
+            layer2_out @ self.params["W3"] + self.params["b3"]
+        )  # transform into output space
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -194,13 +200,19 @@ class MLPClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        logits = self.forward(X)
-        loss = nn.CrossEntropyLoss()(logits, y)
-        loss += self.reg * (
-            torch.norm(self.params["W1"]) ** 2
-            + torch.norm(self.params["W2"]) ** 2
-            + torch.norm(self.params["W3"]) ** 2
-        )
+
+        W1, b1, W2, b2, W3, b3 = self.params.values()
+
+        logits = self.forward(X)  # forward pass
+        l2_reg = 0  # initialize regularization term
+        for i in range(1, 4):  # add up regularization term from all layers
+            l2_reg += self.reg * (
+                torch.sum(self.params[f"W{i}"] ** 2)
+                + torch.sum(self.params[f"b{i}"] ** 2)
+            )
+        loss = (
+            nn.CrossEntropyLoss()(logits, y) + l2_reg
+        )  # compute cross-entropy loss with l2 regularization
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
@@ -219,12 +231,11 @@ class MLPClassifier:
         # Good luck!                                                        #
         # ▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰▱▰ #
         # 🌀 INCEPTION 🌀 (Your code begins its journey here. 🚀 Do not delete this line.)
-        self.params["W1"].data -= self.learning_rate * self.params["W1"].grad
-        self.params["b1"].data -= self.learning_rate * self.params["b1"].grad
-        self.params["W2"].data -= self.learning_rate * self.params["W2"].grad
-        self.params["b2"].data -= self.learning_rate * self.params["b2"].grad
-        self.params["W3"].data -= self.learning_rate * self.params["W3"].grad
-        self.params["b3"].data -= self.learning_rate * self.params["b3"].grad
+
+        # Update the weights and biases for all layers using the gradient descent (backpropagation)
+        for i in range(1, 4):
+            self.params[f"W{i}"].data -= self.learning_rate * self.params[f"W{i}"].grad
+            self.params[f"b{i}"].data -= self.learning_rate * self.params[f"b{i}"].grad
 
         # 🌀 TERMINATION 🌀 (Your code reaches its end. 🏁 Do not delete this line.)
 
